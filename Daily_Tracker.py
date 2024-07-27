@@ -1,4 +1,4 @@
-from shiny import App, render, ui, input, output
+from shiny import App, render, ui, reactive, Inputs, Outputs, Session
 import pandas as pd
 import matplotlib.pyplot as plt
 import io
@@ -55,36 +55,37 @@ def app_ui():
         ui.input_text("task", "Task"),
         ui.input_numeric("duration", "Duration (minutes)", min=0),
         ui.action_button("add", "Add Entry"),
-        ui.output_ui("data_table"),
-        ui.output_ui("plot")
+        ui.output_table("data_table"),
+        ui.output_image("plot")
     )
 
-def server(input, output, session):
+def server(input: Inputs, output: Outputs, session: Session):
     file_path = "data.csv"
 
-    @output()
-    @render.ui
+    @output
+    @render.table
     def data_table():
         data = load_data(file_path)
         if not data.empty:
-            return ui.table(data)
-        return ui.p("No data available.")
+            return data
+        return "No data available."
 
-    @output()
-    @render.ui
+    @output
+    @render.image
     def plot():
         if input.file():
             img_data = plot_data(file_path)
             return ui.img(src=f"data:image/png;base64,{img_data}")
-        return ui.p("Upload a CSV file to see the plot.")
+        return "Upload a CSV file to see the plot."
 
-    @input.add("add")
+    @reactive.Effect
+    @reactive.event(input.add)
     def handle_add_entry():
         add_entry(file_path, input.date(), input.task(), float(input.duration()))
-        output.data_table.update()
-        output.plot.update()
+        output.data_table.invalidate()
+        output.plot.invalidate()
 
 app = App(app_ui, server)
 
-# Run the app
-run_app(app)
+if __name__ == "__main__":
+    app.run()
