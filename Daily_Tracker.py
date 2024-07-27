@@ -85,3 +85,6 @@ def server(input, output, session):
         output.plot.update()
 
 app = App(app_ui, server)
+
+# Run the app
+run_app(app)
