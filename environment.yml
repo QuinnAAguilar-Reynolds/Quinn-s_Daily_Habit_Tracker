@@ -1,0 +1,12 @@
+name: shiny-app
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pandas
+  - matplotlib
+  - shiny
+  - pip
+  - pip:
+    - # Add any additional pip packages here if needed
