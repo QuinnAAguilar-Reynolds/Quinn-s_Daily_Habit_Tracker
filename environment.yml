@@ -1,12 +1,9 @@
-name: shiny-app
+name: shiny-app           # Environment name
 channels:
-  - defaults
-  - conda-forge
+  - defaults              # Default Conda channel
+  - conda-forge           # Additional channel for extra packages
 dependencies:
-  - python=3.10
-  - pandas
-  - matplotlib
-  - shiny
-  - pip
-  - pip:
-    - # Add any additional pip packages here if needed
+  - python=3.10           # Specify the version of Python
+  - pandas                # For data manipulation
+  - matplotlib            # For plotting
+  - shiny                 # For building Shiny apps
